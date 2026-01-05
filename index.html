@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2c3e50">
     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2c3e50">
     <title>Salinas Edu 2026</title>
     <style>
         /* --- ESTILO GERAL --- */
         :root {
             --primary: #2c3e50; /* Azul Escuro */
             --accent: #3498db;  /* Azul Salinas */
-            --ai-color: #8e44ad; /* Roxo para a IA */
+            --ai-color: #8e44ad; /* Roxo IA */
             --bg: #f4f6f7;
             --white: #ffffff;
             --text: #333333;
@@ -26,7 +26,7 @@
             padding: 0;
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 80px;
+            padding-bottom: 90px; /* Espaço extra para o menu */
         }
 
         header {
@@ -57,6 +57,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Cartões */
         .card {
             background: var(--white);
             border-radius: 10px;
@@ -79,16 +80,10 @@
             color: var(--primary);
         }
 
-        /* Cores específicas */
         .card-history { border-left-color: var(--warning); }
-        
-        /* Botões de Ação */
-        .action-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
 
+        /* Botões de Ação (Aba 3) */
+        .action-group { display: flex; gap: 10px; margin-top: 15px; }
         .btn-action {
             flex: 1;
             padding: 10px;
@@ -99,37 +94,62 @@
             cursor: pointer;
             text-decoration: none;
             font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-weight: 500;
         }
-        
         .btn-calc { background-color: var(--primary); }
         .btn-ai { background-color: var(--ai-color); }
         .btn-action:hover { opacity: 0.9; }
 
-        /* Estilos da Calculadora */
+        /* --- SELEÇÃO DE DIAS (Multi-Select) --- */
         .calc-box {
             background: #e8f4fd;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        select, button.calc-btn {
+        
+        .week-selector {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin: 15px 0;
+        }
+        .week-selector input[type="checkbox"] { display: none; }
+        .week-selector label {
+            flex: 1;
+            padding: 10px 5px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text);
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        /* Estilo do botão quando marcado */
+        .week-selector input[type="checkbox"]:checked + label {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.4);
+        }
+
+        button.calc-btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 10px;
             border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button.calc-btn {
             background-color: var(--success);
             color: white;
             border: none;
             font-weight: bold;
             cursor: pointer;
+            font-size: 1rem;
         }
+        
         .result-box {
             margin-top: 15px;
             font-weight: bold;
@@ -137,14 +157,13 @@
             background: white;
             padding: 10px;
             border-radius: 5px;
+            border: 1px solid #eee;
         }
 
         /* Menu Inferior */
         nav.bottom-nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            bottom: 0; left: 0; width: 100%;
             background: white;
             display: flex;
             justify-content: space-around;
@@ -153,7 +172,6 @@
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
             z-index: 99;
         }
-
         .nav-item {
             text-align: center;
             color: #777;
@@ -171,25 +189,42 @@
 <body>
 
     <header>
-        <h1>Calendário Vivo 2026</h1>
+        <h1>Salinas Edu 2026</h1>
         <p>Escola Januário Eleodoro de Lima</p>
     </header>
 
     <div id="tab-planejador" class="tab-content active">
         <div class="card">
             <h3>Calculadora de Dias Letivos</h3>
-            <p>Selecione seu dia de aula para ver a distribuição anual descontando os feriados.</p>
+            <p>Selecione todos os dias da semana em que você leciona para ver o total de aulas reais.</p>
             
             <div class="calc-box">
-                <label>Qual dia você dá aula?</label>
-                <select id="diaSemana">
-                    <option value="1">Segunda-feira</option>
-                    <option value="2">Terça-feira</option>
-                    <option value="3">Quarta-feira</option>
-                    <option value="4">Quinta-feira</option>
-                    <option value="5">Sexta-feira</option>
-                </select>
-                <button class="calc-btn" onclick="calcularAulas()">Calcular Aulas</button>
+                <label>Selecione seus dias:</label>
+                
+                <div class="week-selector">
+                    <div>
+                        <input type="checkbox" id="seg" value="1" class="dia-check">
+                        <label for="seg">Seg</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="ter" value="2" class="dia-check">
+                        <label for="ter">Ter</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="qua" value="3" class="dia-check">
+                        <label for="qua">Qua</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="qui" value="4" class="dia-check">
+                        <label for="qui">Qui</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="sex" value="5" class="dia-check">
+                        <label for="sex">Sex</label>
+                    </div>
+                </div>
+
+                <button class="calc-btn" onclick="calcularAulas()">Calcular Total de Aulas</button>
                 
                 <div id="resultadoCalculo" class="result-box" style="display:none;"></div>
             </div>
@@ -221,7 +256,7 @@
     </nav>
 
     <script>
-        /* --- DADOS DO CALENDÁRIO 2026 --- */
+        /* --- DADOS (Atualizados com São João) --- */
         const dados = {
             "unidades": [
                 { "nome": "I Unidade", "inicio": "2026-02-09", "fim": "2026-05-22", "dias": 71 },
@@ -235,38 +270,12 @@
                 { "data": "2026-12-21", "nome": "Recuperação Final", "tipo": "pedagogico" },
                 { "data": "2026-12-23", "nome": "Conselho de Classe Final", "tipo": "urgente" }
             ],
-            /* DATAS COMEMORATIVAS + LINK G-PLANER */
             "memoria": [
-                { 
-                    "data": "02/01", 
-                    "nome": "Dia do Pescador e Marisqueira", 
-                    "texto": "Reflexão sobre a economia pesqueira e a identidade do trabalhador de Salinas.", 
-                    "acao": true 
-                },
-                { 
-                    "data": "18/06", 
-                    "nome": "Festejos Juninos (Culminância)", 
-                    "texto": "Planejamento da culminância pedagógica antes do recesso (São João).", 
-                    "acao": true 
-                },
-                { 
-                    "data": "02/07", 
-                    "nome": "Independência da Bahia", 
-                    "texto": "A participação do Recôncavo e do povo de Salinas nas lutas de 1823.", 
-                    "acao": true 
-                },
-                { 
-                    "data": "27/07", 
-                    "nome": "Aniversário de Salinas / N. Sra. do Carmo", 
-                    "texto": "Emancipação política e a tradição religiosa como formadoras de identidade.", 
-                    "acao": true 
-                },
-                { 
-                    "data": "20/11", 
-                    "nome": "Consciência Negra", 
-                    "texto": "Herança africana, quilombola e a luta antirracista na educação.", 
-                    "acao": true 
-                }
+                { "data": "02/01", "nome": "Dia do Pescador e Marisqueira", "texto": "Reflexão sobre a economia pesqueira e a identidade do trabalhador de Salinas.", "acao": true },
+                { "data": "18/06", "nome": "Festejos Juninos (Culminância)", "texto": "Atenção: O feriado é dia 24, mas a culminância pedagógica deve ser até dia 18/06 (início do recesso).", "acao": true },
+                { "data": "02/07", "nome": "Independência da Bahia", "texto": "A participação do Recôncavo e do povo de Salinas nas lutas de 1823.", "acao": true },
+                { "data": "27/07", "nome": "Aniversário de Salinas / N. Sra. do Carmo", "texto": "Emancipação política e a tradição religiosa como formadoras de identidade.", "acao": true },
+                { "data": "20/11", "nome": "Consciência Negra", "texto": "Herança africana, quilombola e a luta antirracista na educação.", "acao": true }
             ],
             "feriados_bloqueio": [
                 "2026-02-16", "2026-02-17", "2026-02-18", "2026-04-03", "2026-04-21", 
@@ -275,30 +284,28 @@
             ]
         };
 
-        /* --- LÓGICA DO APP --- */
-        const listaCronograma = document.getElementById('lista-cronograma');
+        /* --- LÓGICA DE RENDERIZAÇÃO --- */
         
+        // 1. Cronograma
+        const listaCronograma = document.getElementById('lista-cronograma');
         dados.unidades.forEach(unid => {
             listaCronograma.innerHTML += `
                 <div class="card">
                     <span class="date-badge">${formatarData(unid.inicio)} a ${formatarData(unid.fim)}</span>
                     <h3>${unid.nome}</h3>
                     <p>Duração: ${unid.dias} dias letivos.</p>
-                </div>
-            `;
+                </div>`;
         });
-
         dados.eventos.forEach(ev => {
             let corBorda = ev.tipo === 'urgente' ? '#e74c3c' : '#3498db';
             listaCronograma.innerHTML += `
                 <div class="card" style="border-left-color: ${corBorda}">
                     <span class="date-badge">${formatarData(ev.data)}</span>
                     <h3>${ev.nome}</h3>
-                </div>
-            `;
+                </div>`;
         });
 
-        /* RENDERIZAÇÃO DA ABA MEMÓRIA COM LINK EXTERNO */
+        // 2. Memória / História
         const listaMemoria = document.getElementById('lista-memoria');
         dados.memoria.forEach(mem => {
             listaMemoria.innerHTML += `
@@ -306,19 +313,14 @@
                     <span class="date-badge">${mem.data}</span>
                     <h3>${mem.nome}</h3>
                     <p>${mem.texto}</p>
-                    
                     <div class="action-group">
-                        <button class="btn-action btn-calc" onclick="planejarAulaContextual('${mem.nome}')">
-                           📅 Ver Datas
-                        </button>
-                        
-                        <a href="https://gplanerai.vercel.app/" target="_blank" class="btn-action btn-ai">
-                           🤖 Criar com IA
-                        </a>
+                        <button class="btn-action btn-calc" onclick="planejarAulaContextual('${mem.nome}')">📅 Ver Datas</button>
+                        <a href="https://gplanerai.vercel.app/" target="_blank" class="btn-action btn-ai">🤖 Criar com IA</a>
                     </div>
-                </div>
-            `;
+                </div>`;
         });
+
+        /* --- FUNÇÕES --- */
 
         function mudarAba(abaNome) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -333,11 +335,22 @@
             const resultBox = document.getElementById('resultadoCalculo');
             resultBox.style.display = 'block';
             resultBox.style.backgroundColor = '#fff3cd';
-            resultBox.innerHTML = `Vamos ver onde encaixar este tema:<br><strong>"${tema}"</strong><br>Selecione seu dia de aula acima.`;
+            resultBox.innerHTML = `<div style="padding:10px;">
+                <p>Vamos planejar o tema: <br><strong>"${tema}"</strong></p>
+                <p style="font-size:0.9rem; color:#555;">Marque acima os dias das suas aulas e clique em "Calcular" para ver onde encaixar.</p>
+            </div>`;
         }
 
         function calcularAulas() {
-            const diaSemana = parseInt(document.getElementById('diaSemana').value);
+            // Lógica Multi-Dias
+            const checkboxes = document.querySelectorAll('.dia-check:checked');
+            const diasEscolhidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
+
+            if (diasEscolhidos.length === 0) {
+                alert("Por favor, selecione pelo menos um dia da semana.");
+                return;
+            }
+
             const feriados = dados.feriados_bloqueio;
             let relatorio = "";
             let totalGeral = 0;
@@ -348,8 +361,11 @@
                 let dataFinal = new Date(unidade.fim);
 
                 while (dataAtual <= dataFinal) {
-                    if (dataAtual.getDay() === diaSemana) {
-                        let dataString = dataAtual.toISOString().split('T')[0];
+                    let diaDaSemanaAtual = dataAtual.getDay();
+                    let dataString = dataAtual.toISOString().split('T')[0];
+
+                    // Verifica se o dia é um dos escolhidos e não é feriado
+                    if (diasEscolhidos.includes(diaDaSemanaAtual)) {
                         if (!feriados.includes(dataString)) {
                             contador++;
                         }
@@ -368,9 +384,10 @@
                 <div style="text-align:left;">
                     ${relatorio}
                     <hr>
-                    <p style="font-size:1.1rem; color:var(--primary)"><strong>Total Anual: ${totalGeral} aulas</strong></p>
-                </div>
-            `;
+                    <p style="font-size:1.1rem; color:var(--primary); text-align:center;">
+                        <strong>Total Anual: ${totalGeral} aulas</strong>
+                    </p>
+                </div>`;
         }
 
         function formatarData(dataISO) {
@@ -378,16 +395,15 @@
             if(partes.length === 3) return `${partes[2]}/${partes[1]}`;
             return dataISO;
         }
+
+        // REGISTRO DO SERVICE WORKER (OFFLINE)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('App pronto:', reg.scope))
+                    .catch(err => console.log('Erro SW:', err));
+            });
+        }
     </script>
-    <script>
-    // Registro do Service Worker para funcionar Offline
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('App pronto para uso offline!', reg.scope))
-                .catch(err => console.log('Falha ao registrar app:', err));
-        });
-    }
-</script>
 </body>
 </html>
