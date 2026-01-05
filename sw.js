@@ -1,4 +1,4 @@
-const CACHE_NAME = 'salinas-edu-v2';
+const CACHE_NAME = 'salinas-v3-floating';
 const ASSETS = [
   './',
   './index.html',
@@ -7,16 +7,17 @@ const ASSETS = [
   './icon-512.png'
 ];
 
-// Instalação
+// Instala e cacheia
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS);
     })
   );
+  self.skipWaiting(); // Força a atualização imediata
 });
 
-// Ativação (Limpeza de cache antigo)
+// Limpa caches antigos
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
@@ -25,9 +26,10 @@ self.addEventListener('activate', (e) => {
       );
     })
   );
+  self.clients.claim(); // Assume o controle da página imediatamente
 });
 
-// Fetch (Servir offline)
+// Serve o conteúdo
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((cachedResponse) => {
