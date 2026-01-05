@@ -1,10 +1,10 @@
-const CACHE_NAME = 'salinas-v3-floating';
+const CACHE_NAME = 'salinas-v4-native';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './icon-192x192.png',
+  './icon-512x512.png'
 ];
 
 // Instala e cacheia
@@ -14,7 +14,7 @@ self.addEventListener('install', (e) => {
       return cache.addAll(ASSETS);
     })
   );
-  self.skipWaiting(); // Força a atualização imediata
+  self.skipWaiting();
 });
 
 // Limpa caches antigos
@@ -26,14 +26,33 @@ self.addEventListener('activate', (e) => {
       );
     })
   );
-  self.clients.claim(); // Assume o controle da página imediatamente
+  self.clients.claim();
 });
 
-// Serve o conteúdo
+// Network first, fallback to cache (melhor para atualizações)
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      return cachedResponse || fetch(e.request);
-    })
+    fetch(e.request)
+      .then((response) => {
+        // Atualiza o cache com a nova resposta
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseClone);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // Offline: retorna do cache
+        return caches.match(e.request);
+      })
   );
+});
+
+// Notificação de atualização disponível
+self.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

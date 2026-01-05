@@ -3,22 +3,58 @@
   "short_name": "SalinasEdu",
   "start_url": "./index.html",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#f4f6f7",
   "theme_color": "#2c3e50",
   "orientation": "portrait",
   "description": "Planejador escolar e histórico de Salinas da Margarida.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "scope": "./",
+  "id": "salinas-edu-2026",
+  "categories": ["education", "productivity"],
+  "screenshots": [],
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "./icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Planejador",
+      "short_name": "Planejar",
+      "description": "Acesse o planejador de aulas",
+      "url": "./index.html#planejador",
+      "icons": [{ "src": "./icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Prazos",
+      "short_name": "Prazos",
+      "description": "Veja os prazos escolares",
+      "url": "./index.html#cronograma",
+      "icons": [{ "src": "./icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

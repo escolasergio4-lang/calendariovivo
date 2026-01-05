@@ -2,71 +2,617 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#2c3e50">
-    <link rel="manifest" href="./manifest.json"> <link rel="apple-touch-icon" href="./icon-192.png"> <title>Salinas Edu 2026</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SalinasEdu">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#2c3e50">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="./icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="./icon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512x512.png">
+    
+    <title>Salinas Edu 2026</title>
     <style>
-        /* --- ESTILOS GERAIS (Mantidos) --- */
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f6f7; --white: #ffffff; --text: #333333; --success: #27ae60; --warning: #f1c40f; --ai-color: #8e44ad; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
-        header { background-color: var(--primary); color: var(--white); padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        header h1 { margin: 0; font-size: 1.2rem; }
-        header p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
+        /* --- RESET E VARIÁVEIS --- */
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --accent: #3182ce;
+            --accent-light: #63b3ed;
+            --bg: #f7fafc;
+            --white: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --success: #38a169;
+            --success-light: #68d391;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --ai-color: #805ad5;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        /* --- BOTÃO FLUTUANTE DE INSTALAÇÃO (FAB) --- */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: calc(80px + var(--safe-bottom));
+            padding-top: var(--safe-top);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior-y: contain;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: calc(16px + var(--safe-top)) 20px 16px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            margin: 4px 0 0;
+            font-size: 0.8rem;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        /* --- BOTÃO FLUTUANTE DE INSTALAÇÃO --- */
         #btn-install-fab {
-            display: none; /* Escondido até o navegador autorizar */
+            display: none;
             position: fixed;
-            bottom: 85px; /* Acima do menu inferior */
-            right: 20px;
-            background-color: var(--success);
+            bottom: calc(90px + var(--safe-bottom));
+            right: 16px;
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
             color: white;
             border: none;
             border-radius: 50px;
-            padding: 12px 20px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            padding: 14px 24px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
             z-index: 2000;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: var(--transition);
         }
-        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+        #btn-install-fab:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* --- BANNER iOS --- */
+        .ios-install-banner {
+            display: none;
+            position: fixed;
+            bottom: calc(90px + var(--safe-bottom));
+            left: 16px;
+            right: 16px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-lg);
+            z-index: 2000;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .ios-install-banner.show {
+            display: block;
+        }
+
+        .ios-install-banner h4 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .ios-install-banner p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .ios-install-banner .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 4px;
+        }
 
         /* --- CARD INTRO --- */
-        .welcome-card { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: center; }
-        .welcome-card h4 { margin: 0 0 10px 0; }
-        .welcome-card p { font-size: 0.9rem; margin-bottom: 10px; }
-        .welcome-card .signature { margin-top: 15px; font-size: 0.8rem; font-style: italic; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; }
+        .welcome-card {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .welcome-card .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .welcome-card h4 {
+            margin: 0 0 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .welcome-card p {
+            font-size: 0.95rem;
+            margin: 0 0 8px;
+            opacity: 0.95;
+        }
+
+        .welcome-card .signature {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            font-style: italic;
+            opacity: 0.75;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 12px;
+        }
 
         /* --- LAYOUT E ABAS --- */
-        .tab-content { display: none; padding: 15px; max-width: 600px; margin: 0 auto; }
-        .tab-content.active { display: block; }
-        .card { background: var(--white); border-radius: 10px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card-history { border-left-color: var(--warning); }
-        .date-badge { display: inline-block; background: #eef2f3; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; color: var(--primary); }
-        
-        /* Botões Ação */
-        .action-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-action { flex: 1; padding: 10px; color: white; text-align: center; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
-        .btn-calc { background-color: var(--primary); }
-        .btn-ai { background-color: var(--ai-color); }
+        .tab-content {
+            display: none;
+            padding: 20px 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.3s ease-out;
+        }
 
-        /* Calculadora */
-        .calc-box { background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .week-selector { display: flex; justify-content: space-between; gap: 5px; margin: 15px 0; }
-        .week-selector input { display: none; }
-        .week-selector label { flex: 1; padding: 10px 5px; background: #fff; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-size: 0.85rem; font-weight: 600; }
-        .week-selector input:checked + label { background-color: var(--accent); color: white; border-color: var(--accent); }
-        button.calc-btn { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; background-color: var(--success); color: white; border: none; font-weight: bold; font-size: 1rem; }
-        .result-box { margin-top: 15px; background: white; padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; }
+        .tab-content.active {
+            display: block;
+        }
 
-        /* Nav Bottom */
-        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; z-index: 1500; }
-        .nav-item { background: none; border: none; font-size: 0.8rem; color: #777; flex: 1; }
-        .nav-item.active { color: var(--accent); font-weight: bold; }
-        .nav-icon { display: block; font-size: 1.5rem; margin-bottom: 2px; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .icon {
+            font-size: 1.5rem;
+        }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--accent);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-history {
+            border-left-color: var(--warning);
+        }
+
+        .card-urgente {
+            border-left-color: var(--danger);
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .date-badge::before {
+            content: '📅';
+            font-size: 0.8rem;
+        }
+
+        /* --- BOTÕES AÇÃO --- */
+        .action-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px 16px;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-action:active {
+            transform: scale(0.95);
+        }
+
+        .btn-calc {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, var(--ai-color) 0%, #9f7aea 100%);
+        }
+
+        /* --- CALCULADORA --- */
+        .calc-box {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+        }
+
+        .calc-box h3 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .calc-box > p {
+            margin: 0 0 16px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .week-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .week-selector input {
+            display: none;
+        }
+
+        .week-selector label {
+            padding: 14px 8px;
+            background: var(--white);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .week-selector label:active {
+            transform: scale(0.95);
+        }
+
+        .week-selector input:checked + label {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        button.calc-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 12px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
+            color: white;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        button.calc-btn:active {
+            transform: scale(0.98);
+        }
+
+        .result-box {
+            margin-top: 16px;
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .result-box p {
+            margin: 8px 0;
+        }
+
+        .result-box hr {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 12px 0;
+        }
+
+        .result-total {
+            font-size: 1.2rem;
+            color: var(--primary);
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+        }
+
+        /* --- NAV BOTTOM --- */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 calc(8px + var(--safe-bottom));
+            border-top: 1px solid #e2e8f0;
+            z-index: 1500;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            flex: 1;
+            padding: 8px 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-item:active {
+            transform: scale(0.9);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-label {
+            font-weight: 600;
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        .toast {
+            position: fixed;
+            bottom: calc(100px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--primary);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s ease-out;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* --- LOADING SKELETON --- */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius-md);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* --- PULL TO REFRESH INDICATOR --- */
+        .pull-indicator {
+            position: fixed;
+            top: calc(var(--safe-top) + 60px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-50px);
+            background: var(--white);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: var(--shadow-md);
+            font-size: 0.85rem;
+            color: var(--text-light);
+            z-index: 99;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .pull-indicator.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state .emoji {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (min-width: 768px) {
+            .tab-content {
+                padding: 24px;
+            }
+
+            .card {
+                padding: 24px;
+            }
+
+            .week-selector label {
+                padding: 16px 12px;
+            }
+        }
+
+        /* --- DARK MODE SUPPORT --- */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1a202c;
+                --white: #2d3748;
+                --text: #e2e8f0;
+                --text-light: #a0aec0;
+            }
+
+            .date-badge {
+                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                color: var(--text);
+            }
+
+            .calc-box {
+                background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            }
+
+            nav.bottom-nav {
+                background: #2d3748;
+                border-top-color: #4a5568;
+            }
+
+            .result-box {
+                background: #2d3748;
+            }
+        }
     </style>
 </head>
 <body>
@@ -77,18 +623,26 @@
 
     <button id="btn-install-fab">📲 Instalar App</button>
 
+    <div id="ios-banner" class="ios-install-banner">
+        <button class="close-btn" onclick="closeIOSBanner()">✕</button>
+        <h4>📲 Instale o App</h4>
+        <p>Toque em <strong>Compartilhar</strong> <span style="font-size:1.1rem">⬆️</span> e depois em <strong>"Adicionar à Tela de Início"</strong> para instalar.</p>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
     <div id="tab-planejador" class="tab-content active">
         <div class="welcome-card">
-            <div style="font-size: 2rem; margin-bottom: 10px;">👋</div>
+            <span class="emoji">👋</span>
             <h4>Olá, colega professor(a)!</h4>
             <p>Seja bem-vindo ao nosso planejador 2026.</p>
             <p class="signature">Feito com carinho para a equipe.<br>— Prof. Sérgio</p>
         </div>
 
         <div class="card">
-            <h3>Calculadora de Dias Letivos</h3>
-            <p>Selecione <strong>todos</strong> os dias da semana em que você leciona:</p>
             <div class="calc-box">
+                <h3>📊 Calculadora de Dias Letivos</h3>
+                <p>Selecione <strong>todos</strong> os dias da semana em que você leciona:</p>
                 <div class="week-selector">
                     <div><input type="checkbox" id="seg" value="1" class="dia-check"><label for="seg">Seg</label></div>
                     <div><input type="checkbox" id="ter" value="2" class="dia-check"><label for="ter">Ter</label></div>
@@ -96,7 +650,7 @@
                     <div><input type="checkbox" id="qui" value="4" class="dia-check"><label for="qui">Qui</label></div>
                     <div><input type="checkbox" id="sex" value="5" class="dia-check"><label for="sex">Sex</label></div>
                 </div>
-                <button class="calc-btn" onclick="calcularAulas()">Calcular Total</button>
+                <button class="calc-btn" onclick="calcularAulas()">✨ Calcular Total</button>
                 <div id="resultadoCalculo" class="result-box" style="display:none;"></div>
             </div>
         </div>
@@ -104,45 +658,84 @@
     </div>
 
     <div id="tab-cronograma" class="tab-content">
-        <h2>Prazos Escolares</h2>
+        <h2 class="section-title"><span class="icon">🔔</span> Prazos Escolares</h2>
         <div id="lista-cronograma"></div>
     </div>
 
     <div id="tab-memoria" class="tab-content">
-        <h2>Memória de Salinas</h2>
+        <h2 class="section-title"><span class="icon">📖</span> Memória de Salinas</h2>
         <div id="lista-memoria"></div>
     </div>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" onclick="mudarAba('planejador')"><span class="nav-icon">📅</span> Planejador</button>
-        <button class="nav-item" onclick="mudarAba('cronograma')"><span class="nav-icon">🔔</span> Prazos</button>
-        <button class="nav-item" onclick="mudarAba('memoria')"><span class="nav-icon">📖</span> História</button>
+        <button class="nav-item active" onclick="mudarAba('planejador')">
+            <span class="nav-icon">📅</span>
+            <span class="nav-label">Planejador</span>
+        </button>
+        <button class="nav-item" onclick="mudarAba('cronograma')">
+            <span class="nav-icon">🔔</span>
+            <span class="nav-label">Prazos</span>
+        </button>
+        <button class="nav-item" onclick="mudarAba('memoria')">
+            <span class="nav-icon">📖</span>
+            <span class="nav-label">História</span>
+        </button>
     </nav>
+</body>
+</html>
 
     <script>
+        /* --- DETECÇÃO DE PLATAFORMA --- */
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isAndroid = /Android/.test(navigator.userAgent);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
         /* --- LÓGICA DE INSTALAÇÃO --- */
         let installPrompt = null;
         const installBtn = document.getElementById('btn-install-fab');
+        const iosBanner = document.getElementById('ios-banner');
 
+        // Android/Chrome install prompt
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             installPrompt = e;
-            installBtn.style.display = 'flex'; // Mostra o botão flutuante
-            console.log("App pode ser instalado!");
+            installBtn.style.display = 'flex';
         });
 
         installBtn.addEventListener('click', async () => {
             if (!installPrompt) return;
             const result = await installPrompt.prompt();
-            console.log(`Resultado: ${result.outcome}`);
+            if (result.outcome === 'accepted') {
+                showToast('🎉 App instalado com sucesso!');
+            }
             installPrompt = null;
             installBtn.style.display = 'none';
         });
 
         window.addEventListener('appinstalled', () => {
             installBtn.style.display = 'none';
-            console.log('App instalado com sucesso.');
+            showToast('🎉 App instalado com sucesso!');
         });
+
+        // iOS install banner
+        if (isIOS && !isStandalone && !localStorage.getItem('iosBannerDismissed')) {
+            setTimeout(() => {
+                iosBanner.classList.add('show');
+            }, 2000);
+        }
+
+        function closeIOSBanner() {
+            iosBanner.classList.remove('show');
+            localStorage.setItem('iosBannerDismissed', 'true');
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), duration);
+        }
 
         /* --- DADOS --- */
         const dados = {
@@ -169,11 +762,48 @@
         };
 
         /* --- RENDERIZAÇÃO --- */
-        const listaCronograma = document.getElementById('lista-cronograma');
-        dados.unidades.forEach(unid => { listaCronograma.innerHTML += `<div class="card"><span class="date-badge">${formatarData(unid.inicio)} a ${formatarData(unid.fim)}</span><h3>${unid.nome}</h3><p>Duração: ${unid.dias} dias letivos.</p></div>`; });
-        dados.eventos.forEach(ev => { let corBorda = ev.tipo === 'urgente' ? '#e74c3c' : '#3498db'; listaCronograma.innerHTML += `<div class="card" style="border-left-color: ${corBorda}"><span class="date-badge">${formatarData(ev.data)}</span><h3>${ev.nome}</h3></div>`; });
-        const listaMemoria = document.getElementById('lista-memoria');
-        dados.memoria.forEach(mem => { listaMemoria.innerHTML += `<div class="card card-history"><span class="date-badge">${mem.data}</span><h3>${mem.nome}</h3><p>${mem.texto}</p><div class="action-group"><button class="btn-action btn-calc" onclick="planejarAulaContextual('${mem.nome}')">📅 Ver Datas</button><a href="https://gplanerai.vercel.app/" target="_blank" class="btn-action btn-ai">🤖 Criar com IA</a></div></div>`; });
+        function renderizarConteudo() {
+            const listaCronograma = document.getElementById('lista-cronograma');
+            listaCronograma.innerHTML = '';
+            
+            dados.unidades.forEach(unid => {
+                listaCronograma.innerHTML += `
+                    <div class="card">
+                        <span class="date-badge">${formatarData(unid.inicio)} a ${formatarData(unid.fim)}</span>
+                        <h3>${unid.nome}</h3>
+                        <p>📚 Duração: <strong>${unid.dias} dias letivos</strong></p>
+                    </div>`;
+            });
+            
+            dados.eventos.forEach(ev => {
+                const cardClass = ev.tipo === 'urgente' ? 'card card-urgente' : 'card';
+                listaCronograma.innerHTML += `
+                    <div class="${cardClass}">
+                        <span class="date-badge">${formatarData(ev.data)}</span>
+                        <h3>${ev.nome}</h3>
+                    </div>`;
+            });
+
+            const listaMemoria = document.getElementById('lista-memoria');
+            listaMemoria.innerHTML = '';
+            
+            dados.memoria.forEach(mem => {
+                listaMemoria.innerHTML += `
+                    <div class="card card-history">
+                        <span class="date-badge">${mem.data}</span>
+                        <h3>${mem.nome}</h3>
+                        <p>${mem.texto}</p>
+                        <div class="action-group">
+                            <button class="btn-action btn-calc" onclick="planejarAulaContextual('${mem.nome}')">
+                                📅 Ver Datas
+                            </button>
+                            <a href="https://gplanerai.vercel.app/" target="_blank" class="btn-action btn-ai">
+                                🤖 Criar com IA
+                            </a>
+                        </div>
+                    </div>`;
+            });
+        }
 
         /* --- FUNÇÕES AUXILIARES --- */
         function mudarAba(abaNome) {
@@ -182,38 +812,109 @@
             document.getElementById(`tab-${abaNome}`).classList.add('active');
             const index = abaNome === 'planejador' ? 0 : abaNome === 'cronograma' ? 1 : 2;
             document.querySelectorAll('.nav-item')[index].classList.add('active');
+            
+            // Haptic feedback (se disponível)
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
         }
+
         function planejarAulaContextual(tema) {
             mudarAba('planejador');
             const resultBox = document.getElementById('resultadoCalculo');
-            resultBox.style.display = 'block'; resultBox.style.backgroundColor = '#fff3cd';
-            resultBox.innerHTML = `<div style="padding:10px;"><p>Vamos planejar o tema: <br><strong>"${tema}"</strong></p><p style="font-size:0.9rem; color:#555;">Marque acima os dias das suas aulas e clique em "Calcular".</p></div>`;
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = `
+                <div style="padding:8px;">
+                    <p style="margin:0 0 8px;">📌 Vamos planejar o tema:</p>
+                    <p style="margin:0; font-size:1.1rem; color:var(--primary);"><strong>"${tema}"</strong></p>
+                    <p style="margin:12px 0 0; font-size:0.85rem; color:var(--text-light);">
+                        Marque acima os dias das suas aulas e clique em "Calcular".
+                    </p>
+                </div>`;
+            showToast('📌 Tema selecionado!');
         }
+
         function calcularAulas() {
             const checkboxes = document.querySelectorAll('.dia-check:checked');
             const diasEscolhidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
-            if (diasEscolhidos.length === 0) { alert("Selecione pelo menos um dia."); return; }
-            const feriados = dados.feriados_bloqueio; let relatorio = ""; let totalGeral = 0;
+            
+            if (diasEscolhidos.length === 0) {
+                showToast('⚠️ Selecione pelo menos um dia');
+                return;
+            }
+            
+            const feriados = dados.feriados_bloqueio;
+            let relatorio = "";
+            let totalGeral = 0;
+            
             dados.unidades.forEach(unidade => {
-                let contador = 0; let dataAtual = new Date(unidade.inicio); let dataFinal = new Date(unidade.fim);
+                let contador = 0;
+                let dataAtual = new Date(unidade.inicio);
+                let dataFinal = new Date(unidade.fim);
+                
                 while (dataAtual <= dataFinal) {
                     if (diasEscolhidos.includes(dataAtual.getDay())) {
-                        if (!feriados.includes(dataAtual.toISOString().split('T')[0])) contador++;
+                        if (!feriados.includes(dataAtual.toISOString().split('T')[0])) {
+                            contador++;
+                        }
                     }
                     dataAtual.setDate(dataAtual.getDate() + 1);
                 }
-                relatorio += `<p><strong>${unidade.nome}:</strong> ${contador} aulas</p>`; totalGeral += contador;
+                relatorio += `<p style="margin:6px 0;"><strong>${unidade.nome}:</strong> ${contador} aulas</p>`;
+                totalGeral += contador;
             });
+            
             const divRes = document.getElementById('resultadoCalculo');
-            divRes.style.display = 'block'; divRes.style.backgroundColor = 'white';
-            divRes.innerHTML = `<div style="text-align:left;">${relatorio}<hr><p style="font-size:1.1rem; color:var(--primary); text-align:center;"><strong>Total Anual: ${totalGeral} aulas</strong></p></div>`;
+            divRes.style.display = 'block';
+            divRes.innerHTML = `
+                <div style="text-align:left;">
+                    ${relatorio}
+                    <hr>
+                    <div class="result-total">
+                        🎯 <strong>Total Anual: ${totalGeral} aulas</strong>
+                    </div>
+                </div>`;
+            
+            showToast('✅ Cálculo concluído!');
+            
+            // Haptic feedback
+            if (navigator.vibrate) {
+                navigator.vibrate([50, 30, 50]);
+            }
         }
-        function formatarData(dataISO) { const partes = dataISO.split('-'); return partes.length === 3 ? `${partes[2]}/${partes[1]}` : dataISO; }
 
-        // SERVICE WORKER REGISTRATION
+        function formatarData(dataISO) {
+            const partes = dataISO.split('-');
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}` : dataISO;
+        }
+
+        /* --- INICIALIZAÇÃO --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarConteudo();
+            
+            // Verifica hash na URL para navegação direta
+            const hash = window.location.hash.replace('#', '');
+            if (hash && ['planejador', 'cronograma', 'memoria'].includes(hash)) {
+                mudarAba(hash);
+            }
+        });
+
+        /* --- SERVICE WORKER --- */
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').then(reg => console.log('SW Registrado:', reg.scope));
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => {
+                    console.log('SW Registrado:', reg.scope);
+                    
+                    // Verifica atualizações
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                showToast('🔄 Nova versão disponível! Recarregue a página.');
+                            }
+                        });
+                    });
+                })
+                .catch(err => console.log('SW Erro:', err));
         }
     </script>
-</body>
-</html>
