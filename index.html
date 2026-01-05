@@ -4,169 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2c3e50">
-    <link rel="manifest" href="manifest.json">
-    <title>Salinas Edu 2026</title>
+    <link rel="manifest" href="./manifest.json"> <link rel="apple-touch-icon" href="./icon-192.png"> <title>Salinas Edu 2026</title>
     <style>
-        /* --- ESTILO GERAL --- */
-        :root {
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --ai-color: #8e44ad;
-            --bg: #f4f6f7;
-            --white: #ffffff;
-            --text: #333333;
-            --danger: #e74c3c;
-            --warning: #f1c40f;
-            --success: #27ae60;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; padding: 0;
-            background-color: var(--bg); color: var(--text);
-            padding-bottom: 90px;
-        }
-
-        header {
-            background-color: var(--primary); color: var(--white);
-            padding: 15px; text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky; top: 0; z-index: 100;
-        }
-        header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+        /* --- ESTILOS GERAIS (Mantidos) --- */
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f6f7; --white: #ffffff; --text: #333333; --success: #27ae60; --warning: #f1c40f; --ai-color: #8e44ad; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+        header { background-color: var(--primary); color: var(--white); padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        header h1 { margin: 0; font-size: 1.2rem; }
         header p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
 
-        /* --- CARD DE BOAS-VINDAS --- */
-        .welcome-card {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white; padding: 20px; border-radius: 15px;
-            margin-bottom: 25px; text-align: center;
-            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
-            border: 1px solid rgba(255,255,255,0.1);
+        /* --- BOTÃO FLUTUANTE DE INSTALAÇÃO (FAB) --- */
+        #btn-install-fab {
+            display: none; /* Escondido até o navegador autorizar */
+            position: fixed;
+            bottom: 85px; /* Acima do menu inferior */
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .welcome-card h4 { margin: 0 0 10px 0; font-size: 1.3rem; font-weight: 700; }
-        .welcome-card p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px; color: rgba(255, 255, 255, 0.9); }
-        .welcome-card .signature {
-            margin-top: 15px; font-size: 0.8rem; font-style: italic; opacity: 0.8;
-            border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;
-        }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
-        /* Botão de Instalação (INTELIGENTE) */
-        #btn-instalar {
-            display: none; /* Começa invisível */
-            background-color: var(--white); color: var(--accent);
-            border: none; padding: 10px 20px; border-radius: 25px;
-            font-weight: bold; margin-top: 15px; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            font-size: 0.9rem; animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+        /* --- CARD INTRO --- */
+        .welcome-card { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: center; }
+        .welcome-card h4 { margin: 0 0 10px 0; }
+        .welcome-card p { font-size: 0.9rem; margin-bottom: 10px; }
+        .welcome-card .signature { margin-top: 15px; font-size: 0.8rem; font-style: italic; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; }
 
-        /* --- CONTEÚDO --- */
-        .tab-content {
-            display: none; padding: 15px; max-width: 600px;
-            margin: 0 auto; animation: fadeIn 0.3s;
-        }
+        /* --- LAYOUT E ABAS --- */
+        .tab-content { display: none; padding: 15px; max-width: 600px; margin: 0 auto; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card {
-            background: var(--white); border-radius: 10px; padding: 15px;
-            margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--accent);
-        }
-        .card h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; }
-        .card p { font-size: 0.9rem; line-height: 1.5; color: #555; }
-        .card .date-badge {
-            display: inline-block; background: #eef2f3; padding: 4px 8px;
-            border-radius: 4px; font-size: 0.8rem; font-weight: bold;
-            margin-bottom: 8px; color: var(--primary);
-        }
+        .card { background: var(--white); border-radius: 10px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .card-history { border-left-color: var(--warning); }
+        .date-badge { display: inline-block; background: #eef2f3; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; color: var(--primary); }
+        
+        /* Botões Ação */
         .action-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-action {
-            flex: 1; padding: 10px; color: white; text-align: center;
-            border: none; border-radius: 5px; cursor: pointer;
-            text-decoration: none; font-size: 0.85rem;
-            display: flex; align-items: center; justify-content: center; font-weight: 500;
-        }
+        .btn-action { flex: 1; padding: 10px; color: white; text-align: center; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
         .btn-calc { background-color: var(--primary); }
         .btn-ai { background-color: var(--ai-color); }
-        
-        /* --- CALCULADORA --- */
-        .calc-box {
-            background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px;
-        }
-        .week-selector {
-            display: flex; justify-content: space-between; gap: 5px; margin: 15px 0;
-        }
-        .week-selector input[type="checkbox"] { display: none; }
-        .week-selector label {
-            flex: 1; padding: 10px 5px; background: #fff;
-            border: 1px solid #ccc; border-radius: 5px;
-            text-align: center; cursor: pointer; font-size: 0.85rem;
-            color: var(--text); transition: all 0.2s; font-weight: 600;
-        }
-        .week-selector input[type="checkbox"]:checked + label {
-            background-color: var(--accent); color: white;
-            border-color: var(--accent);
-            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.4);
-        }
-        button.calc-btn {
-            width: 100%; padding: 12px; margin-top: 10px;
-            border-radius: 5px; background-color: var(--success);
-            color: white; border: none; font-weight: bold;
-            cursor: pointer; font-size: 1rem;
-        }
-        .result-box {
-            margin-top: 15px; font-weight: bold; text-align: center;
-            background: white; padding: 10px; border-radius: 5px; border: 1px solid #eee;
-        }
-        
-        /* NAV */
-        nav.bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: white; display: flex; justify-content: space-around;
-            padding: 10px 0; border-top: 1px solid #ddd;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 99;
-        }
-        .nav-item {
-            text-align: center; color: #777; background: none;
-            border: none; font-size: 0.8rem; cursor: pointer; flex: 1;
-        }
+
+        /* Calculadora */
+        .calc-box { background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .week-selector { display: flex; justify-content: space-between; gap: 5px; margin: 15px 0; }
+        .week-selector input { display: none; }
+        .week-selector label { flex: 1; padding: 10px 5px; background: #fff; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-size: 0.85rem; font-weight: 600; }
+        .week-selector input:checked + label { background-color: var(--accent); color: white; border-color: var(--accent); }
+        button.calc-btn { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; background-color: var(--success); color: white; border: none; font-weight: bold; font-size: 1rem; }
+        .result-box { margin-top: 15px; background: white; padding: 10px; border-radius: 5px; text-align: center; font-weight: bold; }
+
+        /* Nav Bottom */
+        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; z-index: 1500; }
+        .nav-item { background: none; border: none; font-size: 0.8rem; color: #777; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: bold; }
         .nav-icon { display: block; font-size: 1.5rem; margin-bottom: 2px; }
     </style>
 </head>
 <body>
-
     <header>
         <h1>Salinas Edu 2026</h1>
         <p>Escola Januário Eleodoro de Lima</p>
     </header>
 
+    <button id="btn-install-fab">📲 Instalar App</button>
+
     <div id="tab-planejador" class="tab-content active">
-        
         <div class="welcome-card">
             <div style="font-size: 2rem; margin-bottom: 10px;">👋</div>
             <h4>Olá, colega professor(a)!</h4>
-            <p>Preparei este app para facilitar nossa rotina em 2026.</p>
-            
-            <button id="btn-instalar">📲 Instalar App</button>
-
+            <p>Seja bem-vindo ao nosso planejador 2026.</p>
             <p class="signature">Feito com carinho para a equipe.<br>— Prof. Sérgio</p>
         </div>
 
         <div class="card">
             <h3>Calculadora de Dias Letivos</h3>
-            <p>Selecione <strong>todos</strong> os dias da semana em que você leciona para ver o total de aulas reais.</p>
-            
+            <p>Selecione <strong>todos</strong> os dias da semana em que você leciona:</p>
             <div class="calc-box">
-                <label>Selecione seus dias:</label>
                 <div class="week-selector">
                     <div><input type="checkbox" id="seg" value="1" class="dia-check"><label for="seg">Seg</label></div>
                     <div><input type="checkbox" id="ter" value="2" class="dia-check"><label for="ter">Ter</label></div>
@@ -174,7 +96,7 @@
                     <div><input type="checkbox" id="qui" value="4" class="dia-check"><label for="qui">Qui</label></div>
                     <div><input type="checkbox" id="sex" value="5" class="dia-check"><label for="sex">Sex</label></div>
                 </div>
-                <button class="calc-btn" onclick="calcularAulas()">Calcular Total de Aulas</button>
+                <button class="calc-btn" onclick="calcularAulas()">Calcular Total</button>
                 <div id="resultadoCalculo" class="result-box" style="display:none;"></div>
             </div>
         </div>
@@ -188,7 +110,6 @@
 
     <div id="tab-memoria" class="tab-content">
         <h2>Memória de Salinas</h2>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Contexto histórico local para enriquecer suas aulas.</p>
         <div id="lista-memoria"></div>
     </div>
 
@@ -199,28 +120,28 @@
     </nav>
 
     <script>
-        /* --- LÓGICA DO BOTÃO DE INSTALAÇÃO (Smart) --- */
+        /* --- LÓGICA DE INSTALAÇÃO --- */
         let installPrompt = null;
-        const btnInstalar = document.getElementById('btn-instalar');
+        const installBtn = document.getElementById('btn-install-fab');
 
-        // Escuta o evento do Chrome/Android que diz "Pode instalar!"
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Impede o banner automático feio
-            installPrompt = e;  // Guarda o evento
-            btnInstalar.style.display = 'inline-block'; // MOSTRA O NOSSO BOTÃO
+            e.preventDefault();
+            installPrompt = e;
+            installBtn.style.display = 'flex'; // Mostra o botão flutuante
+            console.log("App pode ser instalado!");
         });
 
-        btnInstalar.addEventListener('click', async () => {
+        installBtn.addEventListener('click', async () => {
             if (!installPrompt) return;
-            const result = await installPrompt.prompt(); // Dispara a instalação nativa
-            console.log(`Instalação: ${result.outcome}`);
+            const result = await installPrompt.prompt();
+            console.log(`Resultado: ${result.outcome}`);
             installPrompt = null;
-            btnInstalar.style.display = 'none'; // Esconde o botão após clicar
+            installBtn.style.display = 'none';
         });
 
         window.addEventListener('appinstalled', () => {
-            btnInstalar.style.display = 'none'; // Garante que suma se já instalou
-            console.log('App instalado com sucesso');
+            installBtn.style.display = 'none';
+            console.log('App instalado com sucesso.');
         });
 
         /* --- DADOS --- */
@@ -239,34 +160,22 @@
             ],
             "memoria": [
                 { "data": "02/01", "nome": "Dia do Pescador e Marisqueira", "texto": "Reflexão sobre a economia pesqueira e a identidade do trabalhador de Salinas.", "acao": true },
-                { "data": "18/06", "nome": "Festejos Juninos (Culminância)", "texto": "Atenção: O feriado é dia 24, mas a culminância pedagógica deve ser até dia 18/06 (início do recesso).", "acao": true },
+                { "data": "18/06", "nome": "Festejos Juninos (Culminância)", "texto": "Culminância pedagógica antes do recesso (São João).", "acao": true },
                 { "data": "02/07", "nome": "Independência da Bahia", "texto": "A participação do Recôncavo e do povo de Salinas nas lutas de 1823.", "acao": true },
-                { "data": "27/07", "nome": "Aniversário de Salinas / N. Sra. do Carmo", "texto": "Emancipação política e a tradição religiosa como formadoras de identidade.", "acao": true },
-                { "data": "20/11", "nome": "Consciência Negra", "texto": "Herança africana, quilombola e a luta antirracista na educação.", "acao": true }
+                { "data": "27/07", "nome": "Aniversário de Salinas / N. Sra. do Carmo", "texto": "Emancipação política e a tradição religiosa.", "acao": true },
+                { "data": "20/11", "nome": "Consciência Negra", "texto": "Herança africana, quilombola e a luta antirracista.", "acao": true }
             ],
-            "feriados_bloqueio": [
-                "2026-02-16", "2026-02-17", "2026-02-18", "2026-04-03", "2026-04-21", 
-                "2026-05-01", "2026-06-04", "2026-06-24", "2026-07-02", "2026-09-07", 
-                "2026-10-12", "2026-10-15", "2026-11-02", "2026-11-15", "2026-11-20"
-            ]
+            "feriados_bloqueio": ["2026-02-16", "2026-02-17", "2026-02-18", "2026-04-03", "2026-04-21", "2026-05-01", "2026-06-04", "2026-06-24", "2026-07-02", "2026-09-07", "2026-10-12", "2026-10-15", "2026-11-02", "2026-11-15", "2026-11-20"]
         };
 
-        /* --- LÓGICA DE RENDERIZAÇÃO --- */
+        /* --- RENDERIZAÇÃO --- */
         const listaCronograma = document.getElementById('lista-cronograma');
-        dados.unidades.forEach(unid => {
-            listaCronograma.innerHTML += `<div class="card"><span class="date-badge">${formatarData(unid.inicio)} a ${formatarData(unid.fim)}</span><h3>${unid.nome}</h3><p>Duração: ${unid.dias} dias letivos.</p></div>`;
-        });
-        dados.eventos.forEach(ev => {
-            let corBorda = ev.tipo === 'urgente' ? '#e74c3c' : '#3498db';
-            listaCronograma.innerHTML += `<div class="card" style="border-left-color: ${corBorda}"><span class="date-badge">${formatarData(ev.data)}</span><h3>${ev.nome}</h3></div>`;
-        });
-
+        dados.unidades.forEach(unid => { listaCronograma.innerHTML += `<div class="card"><span class="date-badge">${formatarData(unid.inicio)} a ${formatarData(unid.fim)}</span><h3>${unid.nome}</h3><p>Duração: ${unid.dias} dias letivos.</p></div>`; });
+        dados.eventos.forEach(ev => { let corBorda = ev.tipo === 'urgente' ? '#e74c3c' : '#3498db'; listaCronograma.innerHTML += `<div class="card" style="border-left-color: ${corBorda}"><span class="date-badge">${formatarData(ev.data)}</span><h3>${ev.nome}</h3></div>`; });
         const listaMemoria = document.getElementById('lista-memoria');
-        dados.memoria.forEach(mem => {
-            listaMemoria.innerHTML += `<div class="card card-history"><span class="date-badge">${mem.data}</span><h3>${mem.nome}</h3><p>${mem.texto}</p><div class="action-group"><button class="btn-action btn-calc" onclick="planejarAulaContextual('${mem.nome}')">📅 Ver Datas</button><a href="https://gplanerai.vercel.app/" target="_blank" class="btn-action btn-ai">🤖 Criar com IA</a></div></div>`;
-        });
+        dados.memoria.forEach(mem => { listaMemoria.innerHTML += `<div class="card card-history"><span class="date-badge">${mem.data}</span><h3>${mem.nome}</h3><p>${mem.texto}</p><div class="action-group"><button class="btn-action btn-calc" onclick="planejarAulaContextual('${mem.nome}')">📅 Ver Datas</button><a href="https://gplanerai.vercel.app/" target="_blank" class="btn-action btn-ai">🤖 Criar com IA</a></div></div>`; });
 
-        /* --- FUNÇÕES --- */
+        /* --- FUNÇÕES AUXILIARES --- */
         function mudarAba(abaNome) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -274,52 +183,36 @@
             const index = abaNome === 'planejador' ? 0 : abaNome === 'cronograma' ? 1 : 2;
             document.querySelectorAll('.nav-item')[index].classList.add('active');
         }
-
         function planejarAulaContextual(tema) {
             mudarAba('planejador');
             const resultBox = document.getElementById('resultadoCalculo');
             resultBox.style.display = 'block'; resultBox.style.backgroundColor = '#fff3cd';
-            resultBox.innerHTML = `<div style="padding:10px;"><p>Vamos planejar o tema: <br><strong>"${tema}"</strong></p><p style="font-size:0.9rem; color:#555;">Marque acima os dias das suas aulas e clique em "Calcular" para ver onde encaixar.</p></div>`;
+            resultBox.innerHTML = `<div style="padding:10px;"><p>Vamos planejar o tema: <br><strong>"${tema}"</strong></p><p style="font-size:0.9rem; color:#555;">Marque acima os dias das suas aulas e clique em "Calcular".</p></div>`;
         }
-
         function calcularAulas() {
             const checkboxes = document.querySelectorAll('.dia-check:checked');
             const diasEscolhidos = Array.from(checkboxes).map(cb => parseInt(cb.value));
-
-            if (diasEscolhidos.length === 0) { alert("Por favor, selecione pelo menos um dia da semana."); return; }
-
-            const feriados = dados.feriados_bloqueio;
-            let relatorio = ""; let totalGeral = 0;
-
+            if (diasEscolhidos.length === 0) { alert("Selecione pelo menos um dia."); return; }
+            const feriados = dados.feriados_bloqueio; let relatorio = ""; let totalGeral = 0;
             dados.unidades.forEach(unidade => {
                 let contador = 0; let dataAtual = new Date(unidade.inicio); let dataFinal = new Date(unidade.fim);
                 while (dataAtual <= dataFinal) {
-                    let diaDaSemanaAtual = dataAtual.getDay();
-                    let dataString = dataAtual.toISOString().split('T')[0];
-                    if (diasEscolhidos.includes(diaDaSemanaAtual)) {
-                        if (!feriados.includes(dataString)) { contador++; }
+                    if (diasEscolhidos.includes(dataAtual.getDay())) {
+                        if (!feriados.includes(dataAtual.toISOString().split('T')[0])) contador++;
                     }
                     dataAtual.setDate(dataAtual.getDate() + 1);
                 }
                 relatorio += `<p><strong>${unidade.nome}:</strong> ${contador} aulas</p>`; totalGeral += contador;
             });
-
             const divRes = document.getElementById('resultadoCalculo');
             divRes.style.display = 'block'; divRes.style.backgroundColor = 'white';
             divRes.innerHTML = `<div style="text-align:left;">${relatorio}<hr><p style="font-size:1.1rem; color:var(--primary); text-align:center;"><strong>Total Anual: ${totalGeral} aulas</strong></p></div>`;
         }
+        function formatarData(dataISO) { const partes = dataISO.split('-'); return partes.length === 3 ? `${partes[2]}/${partes[1]}` : dataISO; }
 
-        function formatarData(dataISO) {
-            const partes = dataISO.split('-');
-            if(partes.length === 3) return `${partes[2]}/${partes[1]}`;
-            return dataISO;
-        }
-
-        // SW
+        // SERVICE WORKER REGISTRATION
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(reg => console.log('SW OK')).catch(err => console.log('SW Fail', err));
-            });
+            navigator.serviceWorker.register('./sw.js').then(reg => console.log('SW Registrado:', reg.scope));
         }
     </script>
 </body>
