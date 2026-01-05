@@ -1,6 +1,6 @@
 {
-  "name": "Salinas Edu 2026",
-  "short_name": "SalinasEdu",
+  "name": "Calendário Vivo",
+  "short_name": "Calendário Vivo",
   "start_url": "./index.html",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
