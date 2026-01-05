@@ -26,7 +26,7 @@
             padding: 0;
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 90px; /* Espaço extra para o menu */
+            padding-bottom: 90px;
         }
 
         header {
@@ -39,10 +39,28 @@
             top: 0;
             z-index: 100;
         }
-
         header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
         header p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
 
+        /* --- CARD DE BOAS-VINDAS (INTRO) --- */
+        .welcome-card {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .welcome-card h4 { margin: 0 0 10px 0; font-size: 1.3rem; font-weight: 700; }
+        .welcome-card p { font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px; color: rgba(255, 255, 255, 0.9); }
+        .welcome-card .signature {
+            margin-top: 15px; font-size: 0.8rem; font-style: italic; opacity: 0.8;
+            border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;
+        }
+
+        /* --- CONTEÚDO DAS ABAS --- */
         .tab-content {
             display: none;
             padding: 15px;
@@ -51,13 +69,12 @@
             animation: fadeIn 0.3s;
         }
         .tab-content.active { display: block; }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cartões */
+        /* Cartões Gerais */
         .card {
             background: var(--white);
             border-radius: 10px;
@@ -66,7 +83,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border-left: 5px solid var(--accent);
         }
-
         .card h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; }
         .card p { font-size: 0.9rem; line-height: 1.5; color: #555; }
         .card .date-badge {
@@ -79,111 +95,66 @@
             margin-bottom: 8px;
             color: var(--primary);
         }
-
         .card-history { border-left-color: var(--warning); }
 
         /* Botões de Ação (Aba 3) */
         .action-group { display: flex; gap: 10px; margin-top: 15px; }
         .btn-action {
-            flex: 1;
-            padding: 10px;
-            color: white;
-            text-align: center;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 0.85rem;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 500;
+            flex: 1; padding: 10px; color: white; text-align: center;
+            border: none; border-radius: 5px; cursor: pointer;
+            text-decoration: none; font-size: 0.85rem;
+            display: flex; align-items: center; justify-content: center; font-weight: 500;
         }
         .btn-calc { background-color: var(--primary); }
         .btn-ai { background-color: var(--ai-color); }
         .btn-action:hover { opacity: 0.9; }
 
-        /* --- SELEÇÃO DE DIAS (Multi-Select) --- */
+        /* --- CALCULADORA (SELEÇÃO MÚLTIPLA) --- */
         .calc-box {
             background: #e8f4fd;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        
         .week-selector {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-            margin: 15px 0;
+            display: flex; justify-content: space-between; gap: 5px; margin: 15px 0;
         }
         .week-selector input[type="checkbox"] { display: none; }
         .week-selector label {
-            flex: 1;
-            padding: 10px 5px;
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: var(--text);
-            transition: all 0.2s;
-            font-weight: 600;
+            flex: 1; padding: 10px 5px; background: #fff;
+            border: 1px solid #ccc; border-radius: 5px;
+            text-align: center; cursor: pointer; font-size: 0.85rem;
+            color: var(--text); transition: all 0.2s; font-weight: 600;
         }
-        /* Estilo do botão quando marcado */
         .week-selector input[type="checkbox"]:checked + label {
-            background-color: var(--accent);
-            color: white;
+            background-color: var(--accent); color: white;
             border-color: var(--accent);
             box-shadow: 0 2px 5px rgba(52, 152, 219, 0.4);
         }
-
         button.calc-btn {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border-radius: 5px;
-            background-color: var(--success);
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
+            width: 100%; padding: 12px; margin-top: 10px;
+            border-radius: 5px; background-color: var(--success);
+            color: white; border: none; font-weight: bold;
+            cursor: pointer; font-size: 1rem;
         }
-        
         .result-box {
-            margin-top: 15px;
-            font-weight: bold;
-            text-align: center;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #eee;
+            margin-top: 15px; font-weight: bold; text-align: center;
+            background: white; padding: 10px; border-radius: 5px; border: 1px solid #eee;
         }
 
         /* Menu Inferior */
         nav.bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #ddd;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 99;
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: white; display: flex; justify-content: space-around;
+            padding: 10px 0; border-top: 1px solid #ddd;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 99;
         }
         .nav-item {
-            text-align: center;
-            color: #777;
-            background: none;
-            border: none;
-            font-size: 0.8rem;
-            cursor: pointer;
-            flex: 1;
+            text-align: center; color: #777; background: none;
+            border: none; font-size: 0.8rem; cursor: pointer; flex: 1;
         }
         .nav-item.active { color: var(--accent); font-weight: bold; }
         .nav-icon { display: block; font-size: 1.5rem; margin-bottom: 2px; }
-
     </style>
 </head>
 <body>
@@ -194,9 +165,17 @@
     </header>
 
     <div id="tab-planejador" class="tab-content active">
+        
+        <div class="welcome-card">
+            <div style="font-size: 2rem; margin-bottom: 10px;">👋</div>
+            <h4>Olá, colega professor(a)!</h4>
+            <p>Preparei este app para facilitar nossa rotina em 2026. Calcule suas aulas reais, consulte prazos e acesse nossa história local.</p>
+            <p class="signature">Feito com carinho para a equipe.<br>— Prof. Sérgio</p>
+        </div>
+
         <div class="card">
             <h3>Calculadora de Dias Letivos</h3>
-            <p>Selecione todos os dias da semana em que você leciona para ver o total de aulas reais.</p>
+            <p>Selecione <strong>todos</strong> os dias da semana em que você leciona para ver o total de aulas reais, descontando feriados.</p>
             
             <div class="calc-box">
                 <label>Selecione seus dias:</label>
@@ -239,7 +218,7 @@
 
     <div id="tab-memoria" class="tab-content">
         <h2>Memória de Salinas</h2>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Use o contexto histórico local para enriquecer suas aulas.</p>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Contexto histórico local para enriquecer suas aulas.</p>
         <div id="lista-memoria"></div>
     </div>
 
@@ -256,7 +235,7 @@
     </nav>
 
     <script>
-        /* --- DADOS (Atualizados com São João) --- */
+        /* --- DADOS ATUALIZADOS --- */
         const dados = {
             "unidades": [
                 { "nome": "I Unidade", "inicio": "2026-02-09", "fim": "2026-05-22", "dias": 71 },
@@ -364,7 +343,6 @@
                     let diaDaSemanaAtual = dataAtual.getDay();
                     let dataString = dataAtual.toISOString().split('T')[0];
 
-                    // Verifica se o dia é um dos escolhidos e não é feriado
                     if (diasEscolhidos.includes(diaDaSemanaAtual)) {
                         if (!feriados.includes(dataString)) {
                             contador++;
