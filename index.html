@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2c3e50">
+    <title>Salinas Edu 2026</title>
+    <style>
+        /* --- ESTILO GERAL --- */
+        :root {
+            --primary: #2c3e50; /* Azul Escuro */
+            --accent: #3498db;  /* Azul Salinas */
+            --ai-color: #8e44ad; /* Roxo para a IA */
+            --bg: #f4f6f7;
+            --white: #ffffff;
+            --text: #333333;
+            --danger: #e74c3c;
+            --warning: #f1c40f;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 80px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+        header p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.3s;
+        }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+
+        .card h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; }
+        .card p { font-size: 0.9rem; line-height: 1.5; color: #555; }
+        .card .date-badge {
+            display: inline-block;
+            background: #eef2f3;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        /* Cores específicas */
+        .card-history { border-left-color: var(--warning); }
+        
+        /* Botões de Ação */
+        .action-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .btn-calc { background-color: var(--primary); }
+        .btn-ai { background-color: var(--ai-color); }
+        .btn-action:hover { opacity: 0.9; }
+
+        /* Estilos da Calculadora */
+        .calc-box {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        select, button.calc-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button.calc-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .result-box {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Menu Inferior */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 99;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #777;
+            background: none;
+            border: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+            flex: 1;
+        }
+        .nav-item.active { color: var(--accent); font-weight: bold; }
+        .nav-icon { display: block; font-size: 1.5rem; margin-bottom: 2px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Calendário Vivo 2026</h1>
+        <p>Escola Januário Eleodoro de Lima</p>
+    </header>
+
+    <div id="tab-planejador" class="tab-content active">
+        <div class="card">
+            <h3>Calculadora de Dias Letivos</h3>
+            <p>Selecione seu dia de aula para ver a distribuição anual descontando os feriados.</p>
+            
+            <div class="calc-box">
+                <label>Qual dia você dá aula?</label>
+                <select id="diaSemana">
+                    <option value="1">Segunda-feira</option>
+                    <option value="2">Terça-feira</option>
+                    <option value="3">Quarta-feira</option>
+                    <option value="4">Quinta-feira</option>
+                    <option value="5">Sexta-feira</option>
+                </select>
+                <button class="calc-btn" onclick="calcularAulas()">Calcular Aulas</button>
+                
+                <div id="resultadoCalculo" class="result-box" style="display:none;"></div>
+            </div>
+        </div>
+        <div id="lista-unidades-planejamento"></div>
+    </div>
+
+    <div id="tab-cronograma" class="tab-content">
+        <h2>Prazos Escolares</h2>
+        <div id="lista-cronograma"></div>
+    </div>
+
+    <div id="tab-memoria" class="tab-content">
+        <h2>Memória de Salinas</h2>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Use o contexto histórico local para enriquecer suas aulas.</p>
+        <div id="lista-memoria"></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="mudarAba('planejador')">
+            <span class="nav-icon">📅</span> Planejador
+        </button>
+        <button class="nav-item" onclick="mudarAba('cronograma')">
+            <span class="nav-icon">🔔</span> Prazos
+        </button>
+        <button class="nav-item" onclick="mudarAba('memoria')">
+            <span class="nav-icon">📖</span> História
+        </button>
+    </nav>
+
+    <script>
+        /* --- DADOS DO CALENDÁRIO 2026 --- */
+        const dados = {
+            "unidades": [
+                { "nome": "I Unidade", "inicio": "2026-02-09", "fim": "2026-05-22", "dias": 71 },
+                { "nome": "II Unidade", "inicio": "2026-05-25", "fim": "2026-09-11", "dias": 65 },
+                { "nome": "III Unidade", "inicio": "2026-09-14", "fim": "2026-12-18", "dias": 64 }
+            ],
+            "eventos": [
+                { "data": "2026-02-02", "nome": "Jornada Pedagógica", "tipo": "admin" },
+                { "data": "2026-02-05", "nome": "Início do Ano Letivo", "tipo": "marco" },
+                { "data": "2026-12-18", "nome": "Conselho de Classe (IV Unid)", "tipo": "urgente" },
+                { "data": "2026-12-21", "nome": "Recuperação Final", "tipo": "pedagogico" },
+                { "data": "2026-12-23", "nome": "Conselho de Classe Final", "tipo": "urgente" }
+            ],
+            /* DATAS COMEMORATIVAS + LINK G-PLANER */
+            "memoria": [
+                { 
+                    "data": "02/01", 
+                    "nome": "Dia do Pescador e Marisqueira", 
+                    "texto": "Reflexão sobre a economia pesqueira e a identidade do trabalhador de Salinas.", 
+                    "acao": true 
+                },
+                { 
+                    "data": "18/06", 
+                    "nome": "Festejos Juninos (Culminância)", 
+                    "texto": "Planejamento da culminância pedagógica antes do recesso (São João).", 
+                    "acao": true 
+                },
+                { 
+                    "data": "02/07", 
+                    "nome": "Independência da Bahia", 
+                    "texto": "A participação do Recôncavo e do povo de Salinas nas lutas de 1823.", 
+                    "acao": true 
+                },
+                { 
+                    "data": "27/07", 
+                    "nome": "Aniversário de Salinas / N. Sra. do Carmo", 
+                    "texto": "Emancipação política e a tradição religiosa como formadoras de identidade.", 
+                    "acao": true 
+                },
+                { 
+                    "data": "20/11", 
+                    "nome": "Consciência Negra", 
+                    "texto": "Herança africana, quilombola e a luta antirracista na educação.", 
+                    "acao": true 
+                }
+            ],
+            "feriados_bloqueio": [
+                "2026-02-16", "2026-02-17", "2026-02-18", "2026-04-03", "2026-04-21", 
+                "2026-05-01", "2026-06-04", "2026-06-24", "2026-07-02", "2026-09-07", 
+                "2026-10-12", "2026-10-15", "2026-11-02", "2026-11-15", "2026-11-20"
+            ]
+        };
+
+        /* --- LÓGICA DO APP --- */
+        const listaCronograma = document.getElementById('lista-cronograma');
+        
+        dados.unidades.forEach(unid => {
+            listaCronograma.innerHTML += `
+                <div class="card">
+                    <span class="date-badge">${formatarData(unid.inicio)} a ${formatarData(unid.fim)}</span>
+                    <h3>${unid.nome}</h3>
+                    <p>Duração: ${unid.dias} dias letivos.</p>
+                </div>
+            `;
+        });
+
+        dados.eventos.forEach(ev => {
+            let corBorda = ev.tipo === 'urgente' ? '#e74c3c' : '#3498db';
+            listaCronograma.innerHTML += `
+                <div class="card" style="border-left-color: ${corBorda}">
+                    <span class="date-badge">${formatarData(ev.data)}</span>
+                    <h3>${ev.nome}</h3>
+                </div>
+            `;
+        });
+
+        /* RENDERIZAÇÃO DA ABA MEMÓRIA COM LINK EXTERNO */
+        const listaMemoria = document.getElementById('lista-memoria');
+        dados.memoria.forEach(mem => {
+            listaMemoria.innerHTML += `
+                <div class="card card-history">
+                    <span class="date-badge">${mem.data}</span>
+                    <h3>${mem.nome}</h3>
+                    <p>${mem.texto}</p>
+                    
+                    <div class="action-group">
+                        <button class="btn-action btn-calc" onclick="planejarAulaContextual('${mem.nome}')">
+                           📅 Ver Datas
+                        </button>
+                        
+                        <a href="https://gplanerai.vercel.app/" target="_blank" class="btn-action btn-ai">
+                           🤖 Criar com IA
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+
+        function mudarAba(abaNome) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`tab-${abaNome}`).classList.add('active');
+            const index = abaNome === 'planejador' ? 0 : abaNome === 'cronograma' ? 1 : 2;
+            document.querySelectorAll('.nav-item')[index].classList.add('active');
+        }
+
+        function planejarAulaContextual(tema) {
+            mudarAba('planejador');
+            const resultBox = document.getElementById('resultadoCalculo');
+            resultBox.style.display = 'block';
+            resultBox.style.backgroundColor = '#fff3cd';
+            resultBox.innerHTML = `Vamos ver onde encaixar este tema:<br><strong>"${tema}"</strong><br>Selecione seu dia de aula acima.`;
+        }
+
+        function calcularAulas() {
+            const diaSemana = parseInt(document.getElementById('diaSemana').value);
+            const feriados = dados.feriados_bloqueio;
+            let relatorio = "";
+            let totalGeral = 0;
+
+            dados.unidades.forEach(unidade => {
+                let contador = 0;
+                let dataAtual = new Date(unidade.inicio);
+                let dataFinal = new Date(unidade.fim);
+
+                while (dataAtual <= dataFinal) {
+                    if (dataAtual.getDay() === diaSemana) {
+                        let dataString = dataAtual.toISOString().split('T')[0];
+                        if (!feriados.includes(dataString)) {
+                            contador++;
+                        }
+                    }
+                    dataAtual.setDate(dataAtual.getDate() + 1);
+                }
+                
+                relatorio += `<p><strong>${unidade.nome}:</strong> ${contador} aulas</p>`;
+                totalGeral += contador;
+            });
+
+            const divRes = document.getElementById('resultadoCalculo');
+            divRes.style.display = 'block';
+            divRes.style.backgroundColor = 'white';
+            divRes.innerHTML = `
+                <div style="text-align:left;">
+                    ${relatorio}
+                    <hr>
+                    <p style="font-size:1.1rem; color:var(--primary)"><strong>Total Anual: ${totalGeral} aulas</strong></p>
+                </div>
+            `;
+        }
+
+        function formatarData(dataISO) {
+            const partes = dataISO.split('-');
+            if(partes.length === 3) return `${partes[2]}/${partes[1]}`;
+            return dataISO;
+        }
+    </script>
+    <script>
+    // Registro do Service Worker para funcionar Offline
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('App pronto para uso offline!', reg.scope))
+                .catch(err => console.log('Falha ao registrar app:', err));
+        });
+    }
+</script>
+</body>
+</html>

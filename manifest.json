@@ -1,0 +1,21 @@
+{
+  "name": "Salinas Edu 2026",
+  "short_name": "SalinasEdu",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f6f7",
+  "theme_color": "#2c3e50",
+  "description": "Planejador escolar e histórico de Salinas da Margarida.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
