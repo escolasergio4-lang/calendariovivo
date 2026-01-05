@@ -51,14 +51,19 @@
             border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;
         }
 
-        /* Botão de Instalação (Escondido por padrão) */
+        /* Botão de Instalação (INTELIGENTE) */
         #btn-instalar {
-            display: none; /* Só aparece via JS */
+            display: none; /* Começa invisível */
             background-color: var(--white); color: var(--accent);
             border: none; padding: 10px 20px; border-radius: 25px;
             font-weight: bold; margin-top: 15px; cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            font-size: 0.9rem;
+            font-size: 0.9rem; animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* --- CONTEÚDO --- */
@@ -82,7 +87,6 @@
             margin-bottom: 8px; color: var(--primary);
         }
         .card-history { border-left-color: var(--warning); }
-
         .action-group { display: flex; gap: 10px; margin-top: 15px; }
         .btn-action {
             flex: 1; padding: 10px; color: white; text-align: center;
@@ -92,7 +96,7 @@
         }
         .btn-calc { background-color: var(--primary); }
         .btn-ai { background-color: var(--ai-color); }
-
+        
         /* --- CALCULADORA --- */
         .calc-box {
             background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px;
@@ -122,7 +126,7 @@
             margin-top: 15px; font-weight: bold; text-align: center;
             background: white; padding: 10px; border-radius: 5px; border: 1px solid #eee;
         }
-
+        
         /* NAV */
         nav.bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
@@ -152,7 +156,7 @@
             <h4>Olá, colega professor(a)!</h4>
             <p>Preparei este app para facilitar nossa rotina em 2026.</p>
             
-            <button id="btn-instalar">📲 Instalar App no Celular</button>
+            <button id="btn-instalar">📲 Instalar App</button>
 
             <p class="signature">Feito com carinho para a equipe.<br>— Prof. Sérgio</p>
         </div>
@@ -195,35 +199,29 @@
     </nav>
 
     <script>
-        /* --- LÓGICA DE INSTALAÇÃO PWA (NOVO CÓDIGO) --- */
+        /* --- LÓGICA DO BOTÃO DE INSTALAÇÃO (Smart) --- */
         let installPrompt = null;
         const btnInstalar = document.getElementById('btn-instalar');
 
+        // Escuta o evento do Chrome/Android que diz "Pode instalar!"
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Previne o Chrome de mostrar o aviso automático (que às vezes nem aparece)
-            e.preventDefault();
-            // Guarda o evento para usar depois
-            installPrompt = e;
-            // Mostra nosso botão personalizado
-            btnInstalar.style.display = 'inline-block';
+            e.preventDefault(); // Impede o banner automático feio
+            installPrompt = e;  // Guarda o evento
+            btnInstalar.style.display = 'inline-block'; // MOSTRA O NOSSO BOTÃO
         });
 
         btnInstalar.addEventListener('click', async () => {
             if (!installPrompt) return;
-            // Mostra o prompt nativo
-            const result = await installPrompt.prompt();
-            console.log(`Install prompt outcome: ${result.outcome}`);
-            // Limpa a variável
+            const result = await installPrompt.prompt(); // Dispara a instalação nativa
+            console.log(`Instalação: ${result.outcome}`);
             installPrompt = null;
-            btnInstalar.style.display = 'none';
+            btnInstalar.style.display = 'none'; // Esconde o botão após clicar
         });
 
         window.addEventListener('appinstalled', () => {
-            // Esconde o botão se já instalou
-            btnInstalar.style.display = 'none';
+            btnInstalar.style.display = 'none'; // Garante que suma se já instalou
             console.log('App instalado com sucesso');
         });
-
 
         /* --- DADOS --- */
         const dados = {
